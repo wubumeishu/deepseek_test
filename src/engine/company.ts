@@ -13,7 +13,7 @@ export function initCompany(): CompanyState {
 
 // 部门模板系统：可编辑 + 把常见部门打包成模板
 export const DEPT_TEMPLATES: Record<string, Partial<Department>> = {
-  product:  { name: "产品部", tools: ["pr_write", "backlog"], constraints: "需求单一来源" },
+  product:  { name: "产品部", tools: ["pr_write", "backlog"], apiOnly: true, constraints: "需求单一来源; 技术债预留 15%-20%（每迭代清理）" },
   design:   { name: "设计部", tools: ["mockup", "design_review"], constraints: "交付 UI 规范" },
   frontend: { name: "前端部", tools: ["ui_build", "lint"], constraints: "遵循代码风格指南" },
   backend:  { name: "后端部", tools: ["api_build", "db_schema"], constraints: "模块物理隔离，仅经 API 通信" },

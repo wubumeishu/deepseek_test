@@ -9,6 +9,7 @@ import { canSpend } from "./budget.ts";
 import { tick, startSimulation, dailyStandup, DEFAULT_SIM } from "./simulation.ts";
 import { recordMedia, listMedia } from "./media.ts";
 import { commitCount, bugCount, burndownPct, recordCommit, recordBug } from "./monitor.ts";
+import { debtReserve, recordDebtTask, debtCompliance } from "./debt.ts";
 
 export {
   initCompany, addDepartment, hireEmployee, trainEmployee, DEPT_TEMPLATES, setDepartmentHead, editDepartment,

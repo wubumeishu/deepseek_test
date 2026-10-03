@@ -10,6 +10,7 @@ export function Dashboard({ state, dispatch }: { state: CompanyState; dispatch: 
   const commits = state.git.commits ?? 0;
   const bugs = state.git.bugs ?? 0;
   const bdPct = state.burndown.total ? Math.round((state.burndown.done / state.burndown.total) * 100) : 0;
+  const debtPct = total ? Math.round(tasks.filter(t => t.title.startsWith("[TECH-DEBT]")).reduce((a, t) => a + t.storyPoints, 0) / total * 100) : 0;
   const recentPits = state.pitfalls.slice(-5);
   const audit = state.audit.slice(-8);
   return (
@@ -22,6 +23,7 @@ export function Dashboard({ state, dispatch }: { state: CompanyState; dispatch: 
         <div>Git commits {commits}</div>
         <div>Bug {bugs}</div>
         <div>燃尽 {bdPct}%</div>
+        <div>技术债 {debtPct}%（目标 15-20%）</div>
       </div>
       <div style={{ height: 6, background: "#eee", borderRadius: 3, overflow: "hidden" }}>
         <div style={{ height: "100%", width: total ? (done / total * 100) + "%" : "0%", background: "#4caf50" }} />

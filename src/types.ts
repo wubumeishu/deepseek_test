@@ -13,6 +13,7 @@ export interface Employee {
 }
 
 export interface Department {
+  apiOnly?: boolean;  // 微服务物理隔离：仅经 API 通信
   id: string;
   name: string;
   headId?: string;
