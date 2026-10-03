@@ -1,12 +1,12 @@
-import { initCompany, addDepartment, hireEmployee, trainEmployee, DEPT_TEMPLATES, setDepartmentHead, editDepartment } from "./company";
-import { createTask, decomposeTask, completeTask } from "./taskboard";
-import { formTeam, dissolveTeam } from "./agile";
-import { startMeeting, addMinute, endMeeting } from "./meeting";
-import { openPR, reviewPR, detectConflict } from "./gitflow";
-import { recordPitfall, findPitfall } from "./memory";
-import { logAudit, backup, recentAudit } from "./audit";
-import { canSpend } from "./budget";
-import { tick, startSimulation, dailyStandup, DEFAULT_SIM } from "./simulation";
+import { initCompany, addDepartment, hireEmployee, trainEmployee, DEPT_TEMPLATES, setDepartmentHead, editDepartment } from "./company.ts";
+import { createTask, decomposeTask, completeTask } from "./taskboard.ts";
+import { formTeam, dissolveTeam } from "./agile.ts";
+import { startMeeting, addMinute, endMeeting } from "./meeting.ts";
+import { openPR, reviewPR, detectConflict } from "./gitflow.ts";
+import { recordPitfall, findPitfall } from "./memory.ts";
+import { logAudit, backup, recentAudit } from "./audit.ts";
+import { canSpend } from "./budget.ts";
+import { tick, startSimulation, dailyStandup, DEFAULT_SIM } from "./simulation.ts";
 
 export {
   initCompany, addDepartment, hireEmployee, trainEmployee, DEPT_TEMPLATES, setDepartmentHead, editDepartment,

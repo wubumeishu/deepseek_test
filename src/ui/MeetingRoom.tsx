@@ -12,15 +12,16 @@ export function MeetingRoom({ state, dispatch }: { state: CompanyState; dispatch
           <b>{m.title}</b>
           <div>{m.participants.map(id => state.employees[id]?.name).join(" · ")}</div>
           <div style={{ margin: "4px 0" }}>
-          <b style={{ fontSize: 11 }}>最近发言：</b>
-          <ul style={{ margin: "2px 0", paddingLeft: 18 }}>
-            {m.minutes.slice(-3).map(((min, i) => (
-              <li key={i}>{state.employees[min.employeeId]?.name}：{min.text}</li>
-            ))}
-          </ul>
-          <div style={{ display: "flex", gap: 4, marginTop: 4 }}>
-            <button onClick={() => dispatch("add_minute", { meetingId: m.id, employeeId: m.participants[0], text: "..." })}>+ 发言</button>
-            <button onClick={() => dispatch("end_meeting", m.id)}>结束会议</button>
+            <b style={{ fontSize: 11 }}>最近发言：</b>
+            <ul style={{ margin: "2px 0", paddingLeft: 18 }}>
+              {m.minutes.slice(-3).map((min, i) => (
+                <li key={i}>{state.employees[min.employeeId]?.name}：{min.text}</li>
+              ))}
+            </ul>
+            <div style={{ display: "flex", gap: 4, marginTop: 4 }}>
+              <button onClick={() => dispatch("add_minute", { meetingId: m.id, employeeId: m.participants[0], text: "..." })}>+ 发言</button>
+              <button onClick={() => dispatch("end_meeting", m.id)}>结束会议</button>
+            </div>
           </div>
         </div>
       ))}

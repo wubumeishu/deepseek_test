@@ -1,8 +1,8 @@
 import type { CompanyState } from "../types";
-import { canSpend } from "./budget";
-import { decomposeTask, completeTask } from "./taskboard";
-import { endMeeting } from "./meeting";
-import { logAudit, backup } from "./audit";
+import { canSpend } from "./budget.ts";
+import { decomposeTask, completeTask } from "./taskboard.ts";
+import { endMeeting } from "./meeting.ts";
+import { logAudit, backup } from "./audit.ts";
 
 export interface SimConfig { tickMs: number; coolDownMs: number; autoCompleteRatio: number; }
 export const DEFAULT_SIM: SimConfig = { tickMs: 5000, coolDownMs: 60_000, autoCompleteRatio: 0.15 };

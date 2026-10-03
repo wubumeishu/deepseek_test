@@ -9,5 +9,17 @@
     "build": "tsdown dsh-plugin",
     "test": "vitest run",
     "smoke": "node --experimental-strip-types engine-smoke.mjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "@vitejs/plugin-react": "^4.5.2",
+    "vitest": "^3.1.4",
+    "tsx": "^4.20.0",
+    "tsdown": "^0.13.1"
   }
 }
