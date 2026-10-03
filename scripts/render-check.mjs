@@ -1,5 +1,5 @@
-// 渲染冒烟测试：在 jsdom 中真实执行 dist 构建产物，确认 React 挂载成功。
-// 用途：捕获 "打包成功但运行时白屏" 一类问题（例如 hook 从错误模块导入）。
+// 渲染冒烟测试：在 jsdom 中真实执行 dist 构建产物，验证所有路由可渲染。
+// HashRouter 模式下，hashchange 在 jsdom 中受支持，可逐个验证 7 个路由。
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL, fileURLToPath } from "node:url";
@@ -27,7 +27,16 @@ if (!fs.existsSync(assetPath)) {
   process.exit(1);
 }
 
-// jsdom 不执行 ES module，改用 classic script 的临时验证页
+const ROUTES = ["#/building", "#/tasks", "#/meetings", "#/coffee", "#/quota", "#/media"];
+const EXPECTED = {
+  "#/building": "大楼",
+  "#/tasks": "任务看板",
+  "#/meetings": "会议室",
+  "#/coffee": "咖啡室",
+  "#/quota": "资源配额",
+  "#/media": "媒体生成",
+};
+
 const harnessPath = path.join(distDir, "__rendercheck.html");
 fs.writeFileSync(harnessPath, [
   "<!doctype html><html lang=\"zh\"><head><meta charset=\"UTF-8\" /></head><body>",
@@ -53,25 +62,52 @@ window.addEventListener("error", (e) => errors.push("window.error: " + (e.messag
 window.addEventListener("unhandledrejection", (e) => errors.push("reject: " + (e.reason?.message || e.reason)));
 
 const started = Date.now();
-const timer = setInterval(() => {
+
+function snapshot() {
   const el = window.document.getElementById("root");
   const len = el ? el.innerHTML.length : 0;
-  if (len <= 200 && Date.now() - started < 20000) return;
+  const text = (el?.textContent || "").replace(/\s+/g, " ").trim();
+  return { len, text, elems: el ? el.querySelectorAll("*").length : 0 };
+}
+
+function navigate(hash) {
+  window.location.hash = hash;
+  window.dispatchEvent(new window.Event("hashchange"));
+}
+
+const timer = setInterval(() => {
+  const home = snapshot();
+  if (home.len <= 200 && Date.now() - started < 20000) return;
   clearInterval(timer);
   fs.rmSync(harnessPath, { force: true });
 
-  const text = (el?.textContent || "").replace(/\s+/g, " ").trim();
   const uniqErrors = [...new Set(errors)];
-  const ok = len > 200 && uniqErrors.length === 0;
+  let allRouteMarks = [];
+  let failedRoutes = [];
+
+  for (const hash of ROUTES) {
+    navigate(hash);
+    const s = snapshot();
+    const marker = EXPECTED[hash];
+    if (s.text.includes(marker)) allRouteMarks.push(hash);
+    else failedRoutes.push(hash + "（期望包含「" + marker + "」）");
+  }
 
   console.log("渲染耗时: " + (Date.now() - started) + "ms");
-  console.log("DOM 字节: " + len + " | 元素数: " + (el ? el.querySelectorAll("*").length : 0));
-  console.log("含中文: " + /[\u4e00-\u9fa5]/.test(text));
-  if (text) console.log("文本片段: " + text.slice(0, 160));
+  console.log("首页 DOM 字节: " + home.len + " | 元素数: " + home.elems);
+  console.log("含中文: " + /[\u4e00-\u9fa5]/.test(home.text));
+  if (home.text) console.log("首页文本片段: " + home.text.slice(0, 160));
+  console.log("路由覆盖: " + (allRouteMarks.length + 1) + "/7（含首页）: " + allRouteMarks.join(", "));
+  if (failedRoutes.length) {
+    console.log("✗ 未通过路由: " + failedRoutes.join("; "));
+  }
   if (uniqErrors.length) {
     console.log("运行时错误 (" + uniqErrors.length + "):");
     uniqErrors.slice(0, 8).forEach((e) => console.log("  - " + e.slice(0, 200)));
   }
-  console.log(ok ? "✓ 渲染冒烟测试通过（React 已挂载）" : "✗ 渲染冒烟测试失败（页面白屏）");
+  const ok = home.len > 200 && uniqErrors.length === 0 && failedRoutes.length === 0;
+  console.log(ok
+    ? "✓ 渲染冒烟测试通过（React 已挂载 + 7 路由全部渲染）"
+    : "✗ 渲染冒烟测试失败");
   process.exit(ok ? 0 : 1);
 }, 250);

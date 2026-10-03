@@ -16,32 +16,30 @@ export function Dashboard({ state, dispatch }: { state: CompanyState; dispatch: 
   return (
     <section className="compony-dashboard" aria-label="仪表盘">
       <h3>仪表盘</h3>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 6, fontSize: 12 }}>
-        <div>任务 {done}/{total}</div>
-        <div>剩余故事点 {remaining}</div>
-        <div>待审 PR {openPRs.length}</div>
-        <div>Git commits {commits}</div>
-        <div>Bug {bugs}</div>
-        <div>燃尽 {bdPct}%</div>
-        <div>技术债 {debtPct}%（目标 15-20%）</div>
-        <div>交叉审查覆盖 {Math.round(tasks.filter(t => t.crossReviewedBy).length / (total || 1) * 100)}%</div>
+      <div className="stat-grid">
+        <div className="stat-tile"><span className="label">任务</span><span className="value">{done}<span className="delta"> / {total}</span></span></div>
+        <div className="stat-tile"><span className="label">剩余故事点</span><span className="value">{remaining}</span></div>
+        <div className="stat-tile"><span className="label">待审 PR</span><span className="value">{openPRs.length}</span></div>
+        <div className="stat-tile"><span className="label">Git commits</span><span className="value">{commits}</span></div>
+        <div className="stat-tile"><span className="label">Bug</span><span className="value">{bugs}</span></div>
+        <div className="stat-tile"><span className="label">燃尽</span><span className="value">{bdPct}%</span></div>
+        <div className="stat-tile"><span className="label">技术债</span><span className="value">{debtPct}%<span className="delta"> 目标 15-20%</span></span></div>
+        <div className="stat-tile"><span className="label">交叉审查</span><span className="value">{Math.round(tasks.filter(t => t.crossReviewedBy).length / (total || 1) * 100)}%</span></div>
       </div>
-      <div style={{ height: 6, background: "#eee", borderRadius: 3, overflow: "hidden" }}>
-        <div style={{ height: "100%", width: total ? (done / total * 100) + "%" : "0%", background: "#4caf50" }} />
-      </div>
+      <div className="progress"><div style={{ width: total ? (done / total * 100) + "%" : "0%" }} /></div>
       <h4>Git 分支</h4>
-      <ul style={{ fontSize: 11, paddingLeft: 16 }}>
+      <ul className="list-plain">
         {Object.keys(state.git.branches).map(b => <li key={b}>{b} → {state.git.branches[b].head}</li>)}
       </ul>
       <h4>问题库（最近）</h4>
-      <ul style={{ fontSize: 11, paddingLeft: 16 }}>
+      <ul className="list-plain">
         {recentPits.map(p => <li key={p.id}>{p.title}</li>)}
       </ul>
       <h4>审计日志（最近）</h4>
-      <ul style={{ fontSize: 10, paddingLeft: 16, color: "#666" }}>
+      <ul className="list-plain audit-list">
         {audit.map((a, i) => <li key={i}>[{a.action}] {a.detail}</li>)}
       </ul>
-      <button onClick={() => dispatch("backup")}>备份快照</button>
+      <button className="btn" onClick={() => dispatch("backup")}>备份快照</button>
     </section>
   );
 }

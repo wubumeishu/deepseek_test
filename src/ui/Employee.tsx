@@ -10,41 +10,20 @@ const STATUS_ZH: Record<string, string> = {
 };
 
 export function EmployeeDesk({ employee: e, task }: { employee: Employee; task?: Task }) {
-  // 桌上"本子高度"：按当前任务预计 token 缩放
   const noteH = task?.estTokens ? Math.min(64, Math.round(task.estTokens / 1000)) : 0;
   const showBubble = e.status === "working" || e.status === "cooling";
+  const isImg = e.avatar === "pm_cat" || e.avatar === "dev_cat" || e.avatar === "qa_cat";
   return (
-    <div className="compony-desk" style={{
-      position: "relative", width: 96, height: 120, background: "#fafafa",
-      border: "2px solid " + deskColor(e.status), borderRadius: 8, padding: 6,
-      display: "flex", flexDirection: "column", alignItems: "center",
-    }}>
-      {showBubble && (
-        <div style={{
-          position: "absolute", top: -6, right: 2, background: "#fff",
-          border: "1px solid #bbb", borderRadius: "50%", width: 26, height: 22,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 10, color: "#666",
-        }}>{e.status === "cooling" ? "… 冷却" : "✦"}</div>
-      )}
-      {(e.avatar === "pm_cat" || e.avatar === "dev_cat" || e.avatar === "qa_cat") ? (
-        <img src={"/assets/skins/" + e.avatar + ".png"} alt={e.name}
-             style={{ width: 44, height: 44, objectFit: "cover", borderRadius: 6 }} />
+    <div className={"desk status-" + e.status}>
+      {showBubble && <div className="bubble">{e.status === "cooling" ? "… 冷却" : "✦"}</div>}
+      {isImg ? (
+        <img className="avatar-img" src={"/assets/skins/" + e.avatar + ".png"} alt={e.name} />
       ) : (
-        <div style={{ fontSize: 26 }}>{SKINS[e.avatar] ?? SKINS.default}</div>
+        <div className="avatar-emoji">{SKINS[e.avatar] ?? SKINS.default}</div>
       )}
-      <div style={{ fontSize: 12, fontWeight: 600 }}>{e.name}</div>
-      <div style={{ fontSize: 10, color: deskColor(e.status) }}>{STATUS_ZH[e.status]}</div>
-      {noteH > 0 && (
-        <div title={"预计 ~" + task?.estTokens + " tok"} style={{
-          marginTop: "auto", width: 18, background: "#eceff1", borderRadius: 2,
-          height: noteH, border: "1px solid #cfd8dc",
-        }} />
-      )}
+      <div className="name">{e.name}</div>
+      <div className="status-line">{STATUS_ZH[e.status]}</div>
+      {noteH > 0 && <div className="note" title={"预计 ~" + task?.estTokens + " tok"} style={{ height: noteH }} />}
     </div>
   );
-}
-
-function deskColor(status: string) {
-  return { working: "#4caf50", resting: "#9e9e9e", meeting: "#2196f3", cooling: "#ff9800", idle: "#607d8b" }[status] ?? "#607d8b";
 }

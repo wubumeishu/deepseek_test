@@ -1,0 +1,85 @@
+/* Compony design tokens — single source of truth for visual values.
+   Theme: light default; .compony-root[data-theme="dark"] (or prefers-color-scheme) overrides.
+   Contract: components must reference var(--*) only, never hex literals. */
+
+:root {
+  /* Palette (cool grey-blue, Linear-ish) */
+  --color-bg: #f5f6f8;
+  --color-surface: #ffffff;
+  --color-surface-2: #eceef1;
+  --color-border: #d8dbe0;
+  --color-text: #1b1f24;
+  --color-text-muted: #6b7280;
+  --color-text-faint: #9aa1ab;
+  --color-accent: #3b82f6;
+  --color-accent-2: #2563eb;
+  --color-success: #16a34a;
+  --color-warning: #f59e0b;
+  --color-danger: #dc2626;
+  --color-info: #0ea5e9;
+  --color-neutral: #64748b;
+
+  /* Status colors (employee states) */
+  --status-working: var(--color-success);
+  --status-resting: #9e9e9e;
+  --status-meeting: var(--color-info);
+  --status-cooling: var(--color-warning);
+  --status-idle: var(--color-neutral);
+
+  /* Spacing (4px scale) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+
+  /* Typography */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+  --text-xs: 10px;
+  --text-sm: 12px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Radius / shadow / transition */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 999px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md: 0 2px 8px rgba(0,0,0,.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,.12);
+  --transition-fast: 120ms ease;
+  --transition-base: 200ms ease;
+
+  /* Layout */
+  --sidebar-w: 208px;
+  --topbar-h: 48px;
+  --panel-max-w: 1280px;
+}
+
+/* Dark theme overrides */
+[data-theme="dark"] {
+  --color-bg: #0f1115;
+  --color-surface: #171a21;
+  --color-surface-2: #1f2430;
+  --color-border: #2b3140;
+  --color-text: #e6e8ee;
+  --color-text-muted: #9aa3b2;
+  --color-text-faint: #6b7280;
+  --color-accent: #60a5fa;
+  --color-accent-2: #93c5fd;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+  --shadow-md: 0 2px 8px rgba(0,0,0,.45);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,.55);
+}
