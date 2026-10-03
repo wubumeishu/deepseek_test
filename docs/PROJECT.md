@@ -29,7 +29,7 @@
 | 9 | 休息/工作状态 + 桌上本子高度显示待办 token | ✅ | `ui/Employee.tsx`（estTokens/1000 → 本子高度） |
 | 10 | 问题库（踩坑沉淀） | ✅ | `engine/memory.ts` |
 | 11 | 日志可回溯 + 备份防捣蛋鬼 | ✅ | `engine/audit.ts`（hash 校验和） |
-| 12 | UI 生成（文生图/图生图/文生视频） | ✅ | agnes 技能安装+测试通过；media 引擎 + MediaPanel + compony_media 第9工具；3张猫咪皮肤实图已接入 Employee 前端渲染 |
+| 12 | UI 生成（文生图/图生图/文生视频） | ✅ | 文生图✅(猫咪皮肤3张) / 图生图✅ / 文生视频✅(2.5-flash 猫咪打字片段,上游队列已恢复)；media 引擎 + MediaPanel + 第9工具 |
 | 13 | 底层随时兼容 + 按需分配 | 🔶 | 类型系统可扩展，运行时按需 |
 | 14 | 看板 | 🔶 | ui/Dashboard.tsx（燃尽/分支/问题库/审计） |
 | 15 | 每日站会（昨日/今日/阻碍三问） | ✅ | `engine/simulation.ts` dailyStandup |
@@ -115,7 +115,7 @@ compony/
 - ✅ P1 完成：Lint 拦截（eslint 全绿 0err0warn）+ 自动测试守护（pre-commit 钩子 + GitHub Actions CI，红灯不合并）
 - ✅ P2 完成：dsh-cron 每日站会（scripts/daily-standup.mjs + tick 自动站会）
 - ✅ P2 完成：dsh-context 配额仪表盘（QuotaDashboard 双配额条）
-- 🆕 agnes-ai-image / agnes-ai-video 技能已安装并测试通过（文生图✅ / 图生图✅ / 视频⚠️上游队列满）
+- ✅ agnes-ai-image / agnes-ai-video 技能全链路打通（文生图✅ / 图生图✅ / 文生视频✅ 2.5-flash 猫咪打字片段完成）
 
 ---
 
