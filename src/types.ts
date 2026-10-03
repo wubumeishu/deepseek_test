@@ -47,6 +47,7 @@ export interface Task {
   pr?: PullRequest;
   estTokens?: number;
   storyPoints: number;
+  crossReviewedBy?: string;  // 交叉审查人
   parentTeam?: string;
 }
 

@@ -10,6 +10,7 @@ import { tick, startSimulation, dailyStandup, DEFAULT_SIM } from "./simulation.t
 import { recordMedia, listMedia } from "./media.ts";
 import { commitCount, bugCount, burndownPct, recordCommit, recordBug } from "./monitor.ts";
 import { debtReserve, recordDebtTask, debtCompliance } from "./debt.ts";
+import { crossReview, crossReviewCoverage } from "./review.ts";
 
 export {
   initCompany, addDepartment, hireEmployee, trainEmployee, DEPT_TEMPLATES, setDepartmentHead, editDepartment,

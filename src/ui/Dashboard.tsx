@@ -24,6 +24,7 @@ export function Dashboard({ state, dispatch }: { state: CompanyState; dispatch: 
         <div>Bug {bugs}</div>
         <div>燃尽 {bdPct}%</div>
         <div>技术债 {debtPct}%（目标 15-20%）</div>
+        <div>交叉审查覆盖 {Math.round(tasks.filter(t => t.crossReviewedBy).length / (total || 1) * 100)}%</div>
       </div>
       <div style={{ height: 6, background: "#eee", borderRadius: 3, overflow: "hidden" }}>
         <div style={{ height: "100%", width: total ? (done / total * 100) + "%" : "0%", background: "#4caf50" }} />

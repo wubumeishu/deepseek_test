@@ -121,6 +121,26 @@ export default {
       },
     },
     {
+      name: "compony_cross_review",
+      description: "交叉审查：另一位同事审查某任务（不能审查自己的），确保无人不可替代",
+      input: {
+        type: "object",
+        properties: {
+          taskId: { type: "string" },
+          reviewerId: { type: "string" },
+          approved: { type: "boolean" },
+          note: { type: "string" },
+        },
+        required: ["taskId", "reviewerId", "approved"],
+      },
+      run: async (a) => {
+        const s = loadState();
+        const ok = E.crossReview(s, a.taskId, a.reviewerId, a.approved, a.note);
+        saveState(s);
+        return { reviewed: a.taskId, approved: a.approved, ok, coverage: E.crossReviewCoverage(s) + "%" };
+      },
+    },
+    {
       name: "compony_media",
       description: "生成 UI 素材（文生图/图生图/文生视频，走 agnes-ai-image/agones-ai-video 技能，QuotaGuard 池）",
       input: {
