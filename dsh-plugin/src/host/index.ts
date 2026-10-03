@@ -173,5 +173,23 @@ export default {
         return { backupId: id, stateFile: STATE_FILE };
       },
     },
+    {
+      name: "compony_media",
+      description: "生成 UI 素材（文生图/图生图/文生视频，走 agnes-ai-image/agones-ai-video 技能，QuotaGuard 池）",
+      input: {
+        type: "object",
+        properties: {
+          kind: { type: "string", enum: ["image", "video"] },
+          prompt: { type: "string" },
+        },
+        required: ["kind", "prompt"],
+      },
+      run: async (a: any) => {
+        const s = loadState();
+        const m = E.recordMedia(s, { kind: a.kind, prompt: a.prompt, url: "", model: a.kind === "image" ? "agnes-image-2.5-flash" : "agnes-video-2.5", createdById: "ui-designer" });
+        saveState(s);
+        return { media: m, note: "实际生成由 DSH 的 agnes-ai-image/agnes-ai-video 技能执行；本工具登记产物" };
+      },
+    },
   ],
 };

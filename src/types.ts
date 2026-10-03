@@ -99,6 +99,7 @@ export interface CompanyState {
   teams: Record<string, AgileTeam>;
   git: GitState;
   pitfalls: Pitfall[];
+  media: MediaAsset[];
   audit: AuditLog[];
   budget: {
     requestsPerMin: number;
@@ -109,4 +110,16 @@ export interface CompanyState {
     resetBurstAt: number;
   };
   burndown: { total: number; done: number };
+}
+
+// UI 生成（文生图/图生图/文生视频）产出的媒体资源
+export interface MediaAsset {
+  id: string;
+  kind: "image" | "video";
+  prompt: string;
+  url: string;
+  localPath?: string;
+  model: string;
+  createdById?: string;   // 哪位"员工"生成的
+  createdAt: number;
 }

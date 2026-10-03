@@ -5,6 +5,7 @@ import { Workstations } from "./Workstations";
 import { CoffeeRoom } from "./CoffeeRoom";
 import { MeetingRoom } from "./MeetingRoom";
 import { Dashboard } from "./Dashboard";
+import { MediaPanel } from "./MediaPanel";
 import { AgileBoard } from "./AgileBoard";
 
 export interface ComposePanelProps {
@@ -20,6 +21,7 @@ export function CompanyPanel({ state, dispatch }: ComposePanelProps) {
       <CoffeeRoom state={state} />
       <MeetingRoom state={state} dispatch={dispatch} />
       <AgileBoard state={state} dispatch={dispatch} />
+      <MediaPanel state={state} dispatch={dispatch} />
       <Dashboard state={state} dispatch={dispatch} />
     </div>
   );

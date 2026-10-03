@@ -4,7 +4,8 @@ export function initCompany(): CompanyState {
   return {
     employees: {}, departments: {}, meetings: {}, tasks: {}, teams: {},
     git: { branches: {}, trunk: "main", conflicts: {} },
-    pitfalls: [], audit: [],
+    pitfalls: [],
+  media: [], audit: [],
     budget: { requestsPerMin: 160, burst: 1500, usedMin: 0, usedBurst: 0, resetMinAt: 0, resetBurstAt: 0 },
     burndown: { total: 0, done: 0 },
   };

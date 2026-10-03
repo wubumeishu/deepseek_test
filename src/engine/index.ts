@@ -7,6 +7,7 @@ import { recordPitfall, findPitfall } from "./memory.ts";
 import { logAudit, backup, recentAudit } from "./audit.ts";
 import { canSpend } from "./budget.ts";
 import { tick, startSimulation, dailyStandup, DEFAULT_SIM } from "./simulation.ts";
+import { recordMedia, listMedia } from "./media.ts";
 
 export {
   initCompany, addDepartment, hireEmployee, trainEmployee, DEPT_TEMPLATES, setDepartmentHead, editDepartment,
@@ -18,7 +19,8 @@ export {
   logAudit, backup, recentAudit,
   canSpend,
   tick, startSimulation, dailyStandup, DEFAULT_SIM,
-};
+
+recordMedia, listMedia};
 export type { CompanyState } from "../types";
 
 export function runCompanyDemo() {
