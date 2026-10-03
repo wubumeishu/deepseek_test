@@ -94,6 +94,7 @@ export interface AuditLog {
 }
 
 export interface CompanyState {
+  __lastStandup?: number;
   employees: Record<string, Employee>;
   departments: Record<string, Department>;
   meetings: Record<string, Meeting>;
