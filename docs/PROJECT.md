@@ -1,8 +1,27 @@
 # Compony — 公司多智能体协同系统 · 项目目标与设计文档
 
-> 文档版本：v1.0（2026-10-04）
+> 文档版本：v1.1（2026-10-04）
 > 项目根目录：`I:\deepseek\compony`
-> Git 远程：https://github.com/wubumeishu/deepseek_test（分支 main，commit 06f06da）
+> Git 远程：https://github.com/wubumeishu/deepseek_test（分支 main，commit 60615bb）
+
+---
+
+## 〇、M1 里程碑完成（2026-10-04）
+
+**前端工程化 —— 观感从 demo → 产品**
+
+| 验收项 | 状态 | 证据 |
+|---|---|---|
+| 设计令牌层 tokens.css（颜色/间距/字号/圆角/阴影/过渡 + 暗色主题） | ✅ | src/styles/tokens.css |
+| 清除 src/ui/* 全部内联 style，改为语义化 class | ✅ | .panel / .employee-card / .kanban-col 等 |
+| react-router-dom（HashRouter）：Layout + 7 个懒加载路由 | ✅ | /, /building, /tasks, /meetings, /coffee, /quota, /media |
+| 状态分层：Zustand UI 状态 + useSyncExternalStore 订阅引擎 tick | ✅ | src/state/companyStore.ts |
+| 契约测试 ≥ 3 个（无硬编码色值 / 组件不 import engine / 每页 lazy） | ✅ 14 条 | src/ui/__tests__/contract.test.ts |
+| 7 个路由可导航、切页不丢模拟状态 | ✅ | 路由覆盖 7/7（render-check） |
+| npm run check:render 覆盖路由渲染并通过 | ✅ | 渲染耗时 264ms，DOM 1966 字节 |
+
+**新增文件**：src/styles/、src/pages/（7 页）、src/state/、src/ui/layout/、src/ui/__tests__/
+**构建调整**：vite.config.ts 增加 inlineDynamicImports，保证 jsdom classic-script 渲染冒烟可执行（单文件 200.58 kB）。
 
 ---
 
