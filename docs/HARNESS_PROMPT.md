@@ -1,4 +1,10 @@
-# Compony — DeepSeek Harness 长期目标提示词
+# Compony — DeepSeek Harness 长期目标提示词（v1 · 已过时）
+
+> ⚠️ **本文件已被 [`docs/LONG_TERM_GOAL.md`](LONG_TERM_GOAL.md)（v2）取代，请使用 v2。**
+>
+> 本 v1 只作历史留存。其中的基线数据（39 文件 / 8 组件 / 旧 P0-P2 路线图 / 8 个工具）
+> 与当前项目状态已不一致：面板已修复并验证、引擎已扩到 14 模块、工具已扩到 10 个、
+> 长期方向已明确为「独立化路线 M1-M4」。
 
 > 把下面整段复制，作为一条新的任务/目标发给 DeepSeek Harness，即可让它接手并长期推进本项目。
 
