@@ -198,6 +198,16 @@ runCompanyDemo(): CompanyState   // 5部门5员工完整闭环
 
 ### 8.1 启动方式
 
+**方式一：双击一键启动（推荐，不依赖任何会话）**
+
+```
+start-panel.cmd
+```
+
+首次运行会自动构建，随后在终端打印面板地址；关闭该窗口即停止服务。
+
+**方式二：手动**
+
 ```bash
 npm run build:panel     # vite build → dist/
 npm run serve:panel     # 静态服务器，默认 127.0.0.1:4173（可用 PORT 覆盖）
