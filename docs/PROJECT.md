@@ -29,7 +29,7 @@
 | 9 | 休息/工作状态 + 桌上本子高度显示待办 token | ✅ | `ui/Employee.tsx`（estTokens/1000 → 本子高度） |
 | 10 | 问题库（踩坑沉淀） | ✅ | `engine/memory.ts` |
 | 11 | 日志可回溯 + 备份防捣蛋鬼 | ✅ | `engine/audit.ts`（hash 校验和） |
-| 12 | UI 生成（文生图/图生图/文生视频） | ⬜ | 未接入，预留接口位 |
+| 12 | UI 生成（文生图/图生图/文生视频） | 🔶 | 已安装 agnes-ai-image / agnes-ai-video 技能（C:\\Users\\Administrator\\.agents\\skills\\），测试通过 |
 | 13 | 底层随时兼容 + 按需分配 | 🔶 | 类型系统可扩展，运行时按需 |
 | 14 | 看板 | 🔶 | ui/Dashboard.tsx（燃尽/分支/问题库/审计） |
 | 15 | 每日站会（昨日/今日/阻碍三问） | ✅ | `engine/simulation.ts` dailyStandup |
@@ -109,6 +109,7 @@ compony/
 - ✅ DSH 插件骨架完整（8 个 `compony_*` host 工具 + 右侧"公司"Tab）
 - ✅ Git 仓库干净推送到 GitHub（39 文件，`git fsck` 无损坏对象）
 - 🔶 待完成（见下方路线图）
+- 🆕 agnes-ai-image / agnes-ai-video 技能已安装并测试通过（文生图✅ / 图生图✅ / 视频⚠️上游队列满）
 
 ---
 
@@ -120,7 +121,7 @@ compony/
 3. 持久化 `~/.compony/state.json` 读写闭环
 
 **P1 — 补齐核心需求**
-4. UI 生成（文生图/图生图/文生视频）接 agnes-ai-image
+4. UI 生成（文生图/图生图/文生视频）✅ 技能已装+测试通过，待接入面板 UI
 5. 看板完善（Git commits 计数 / Bug 计数 / 燃尽图实时）
 6. Lint 自动拦截 + 自动测试守护（红灯不合并）
 7. 技术债 15%-20% 预留机制
