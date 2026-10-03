@@ -24,9 +24,7 @@ function walk(dir: string): string[] {
 
 // 检测文件是否从 "…/engine" 直接 import
 function hasEngineImport(src: string): boolean {
-  const re1 = /from\s*["']\.\.\//g;
-  const lines = src.split("\n");
-  for (const line of lines) {
+  for (const line of src.split("\n")) {
     if (/from\s*["'][^"']*engine["']/.test(line) && !line.includes("types")) return true;
   }
   return false;
