@@ -68,6 +68,8 @@ export interface AgileTeam {
 }
 
 export interface GitState {
+  commits: number;
+  bugs: number;
   branches: Record<string, { head: string; base: string }>;
   trunk: string;
   conflicts: Record<string, { branchA: string; branchB: string; file: string }>;

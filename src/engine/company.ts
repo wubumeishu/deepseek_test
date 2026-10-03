@@ -3,7 +3,9 @@ import type { CompanyState, Department, Employee } from "../types";
 export function initCompany(): CompanyState {
   return {
     employees: {}, departments: {}, meetings: {}, tasks: {}, teams: {},
-    git: { branches: {}, trunk: "main", conflicts: {} },
+    git: { branches: {commits: 0,
+    bugs: 0,
+  }, trunk: "main", conflicts: {} },
     pitfalls: [],
   media: [], audit: [],
     budget: { requestsPerMin: 160, burst: 1500, usedMin: 0, usedBurst: 0, resetMinAt: 0, resetBurstAt: 0 },

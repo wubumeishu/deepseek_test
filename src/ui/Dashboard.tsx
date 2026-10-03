@@ -7,15 +7,21 @@ export function Dashboard({ state, dispatch }: { state: CompanyState; dispatch: 
   const total = tasks.length;
   const remaining = state.burndown.total - state.burndown.done;
   const openPRs = tasks.filter(t => t.pr && t.pr.status === "open");
+  const commits = state.git.commits ?? 0;
+  const bugs = state.git.bugs ?? 0;
+  const bdPct = state.burndown.total ? Math.round((state.burndown.done / state.burndown.total) * 100) : 0;
   const recentPits = state.pitfalls.slice(-5);
   const audit = state.audit.slice(-8);
   return (
     <section className="compony-dashboard" aria-label="仪表盘">
       <h3>仪表盘</h3>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6, fontSize: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 6, fontSize: 12 }}>
         <div>任务 {done}/{total}</div>
         <div>剩余故事点 {remaining}</div>
         <div>待审 PR {openPRs.length}</div>
+        <div>Git commits {commits}</div>
+        <div>Bug {bugs}</div>
+        <div>燃尽 {bdPct}%</div>
       </div>
       <div style={{ height: 6, background: "#eee", borderRadius: 3, overflow: "hidden" }}>
         <div style={{ height: "100%", width: total ? (done / total * 100) + "%" : "0%", background: "#4caf50" }} />
