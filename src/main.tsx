@@ -1,4 +1,5 @@
-import { createRoot, useEffect, useState } from "react-dom/client";
+import { createRoot } from "react-dom/client";
+import { useEffect, useState } from "react";
 import { CompanyPanel } from "./ui/index";
 import {
   runCompanyDemo, startSimulation, dailyStandup, DEFAULT_SIM,

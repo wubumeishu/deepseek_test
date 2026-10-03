@@ -191,3 +191,51 @@ DEFAULT_SIM = { tickMs: 5000, coolDownMs: 60000, autoCompleteRatio: 0.15 }
 // index
 runCompanyDemo(): CompanyState   // 5部门5员工完整闭环
 ```
+
+---
+
+## 八、前端面板：启动方式与「白屏」事故复盘
+
+### 8.1 启动方式
+
+```bash
+npm run build:panel     # vite build → dist/
+npm run serve:panel     # 静态服务器，默认 127.0.0.1:4173（可用 PORT 覆盖）
+```
+
+浏览器打开 **http://127.0.0.1:4173/**。
+
+- 静态服务器只绑定 `127.0.0.1`，且对 `.js` / `.html` 返回 `Cache-Control: no-store`，
+  避免重建后浏览器仍执行旧 bundle。
+- 开发态亦可 `npm run dev`（vite dev server，已固定 `host: 127.0.0.1`）。
+
+### 8.2 事故复盘：页面 HTTP 200 但整页空白
+
+**现象**：`/index.html` 与 `/assets/*.js` 全部 200，但页面空白，控制台报
+`X.useState is not a function or its return value is not iterable`。
+
+**根因**：`src/main.tsx` 误从 `react-dom/client` 导入 hooks：
+
+```ts
+// ✗ 错误：react-dom/client 只导出 createRoot / hydrateRoot
+import { createRoot, useEffect, useState } from "react-dom/client";
+// ✓ 正确
+import { createRoot } from "react-dom/client";
+import { useEffect, useState } from "react";
+```
+
+`react-dom/client` 是 CJS 互操作模块，Rollup 无法在构建期发现缺失的具名导出，
+因此 **打包成功、无警告**，只在运行时才炸：`Sr` 即 `react-dom/client` 命名空间对象，
+其 `useState` 为 `undefined`，解构赋值直接抛错 → React 无法挂载 → 白屏。
+
+**防护（三重）**：
+
+1. **构建期**：ESLint `no-restricted-imports` 禁止从 `react-dom` / `react-dom/client`
+   导入任何 hook（见 `eslint.config.js` 的 `REACT_HOOKS`）。
+2. **运行期**：`npm run check:render` 用 jsdom 真实执行 `dist/` 产物，
+   要求 `#root` 渲染出 >200 字节 DOM 且运行时 0 错误，否则退出码 1。
+3. **CI**：`npm run verify:panel`（= build:panel + check:render）已接入
+   `.github/workflows/ci.yml`。
+
+> 注意：`npm run build` 构建的是 DSH 插件（tsdown），**不是**前端面板；
+> 面板请用 `npm run build:panel`。
