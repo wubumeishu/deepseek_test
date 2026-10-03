@@ -23,7 +23,10 @@ export {
   canSpend,
   tick, startSimulation, dailyStandup, DEFAULT_SIM,
 
-recordMedia, listMedia};
+recordMedia, listMedia,
+commitCount, bugCount, burndownPct, recordCommit, recordBug,
+debtReserve, recordDebtTask, debtCompliance,
+crossReview, crossReviewCoverage };
 export type { CompanyState } from "../types";
 
 export function runCompanyDemo() {
