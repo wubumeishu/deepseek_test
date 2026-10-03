@@ -32,8 +32,8 @@ export function runCompanyDemo() {
   addDepartment(s, "qa", "qa");
   setDepartmentHead(s, "backend", Object.keys(s.employees)[0] ?? "");
   const pm = hireEmployee(s, "花花", "product", "product", 80, "cat_fluffy");
-  const ui = hireEmployee(s, "球球", "designer", "design", 75, "cat_orange");
-  const fe = hireEmployee(s, "煤球", "frontend", "frontend", 85, "cat_black");
+  hireEmployee(s, "球球", "designer", "design", 75, "cat_orange");
+  hireEmployee(s, "煤球", "frontend", "frontend", 85, "cat_black");
   const be = hireEmployee(s, "汤圆", "backend", "backend", 88, "cat_white");
   const qa = hireEmployee(s, "布丁", "qa", "qa", 70, "cat_brown");
   trainEmployee(s, qa.id);

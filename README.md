@@ -47,3 +47,8 @@ compony/
 │  │  ├─ audit.ts         日志回溯/备份防篡改
 │  │  ├─ budget.ts        资源预算（每分钟160/每5h1500 效果1+2 叠加）
 │  │  ├─ simulation.ts    模拟循环 tick（员工冷却/领任务/完成/会议/备份）
+## 自动测试守护（红灯不合并）
+
+- **pre-commit 钩子**：`.git/hooks/pre-commit` 提交前自动跑 `npm run test:full`（lint+vitest+引擎冒烟），红灯直接拦截提交。
+- **CI 拦截**：`.github/workflows/ci.yml` 在 PR/push 到 main 时跑同一套检查，红灯禁止合并。
+- 跳过（仅限紧急）：`git commit --no-verify`。

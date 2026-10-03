@@ -1,0 +1,20 @@
+name: CI 测试守护
+on:
+  push: { branches: [main] }
+  pull_request: { branches: [main] }
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm }
+      - run: npm ci || npm install
+      # 红灯拦截：lint + 单元测试 + 引擎冒烟
+      - run: npm run test:full
+      # 前端可构建
+      - run: npm run build --if-present || node node_modules/vite/bin/vite.js build
+      - name: 上传产物（可选验证）
+        if: always()
+        run: ls -R dist || true

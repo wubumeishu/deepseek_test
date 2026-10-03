@@ -1,4 +1,3 @@
-import type { CompanyState, Employee } from "../types";
 import { EmployeeDesk } from "./Employee";
 
 // 咖啡室：冷却的员工来此休息（模型限流/大消耗后冷却）
