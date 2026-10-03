@@ -29,7 +29,7 @@
 | 9 | 休息/工作状态 + 桌上本子高度显示待办 token | ✅ | `ui/Employee.tsx`（estTokens/1000 → 本子高度） |
 | 10 | 问题库（踩坑沉淀） | ✅ | `engine/memory.ts` |
 | 11 | 日志可回溯 + 备份防捣蛋鬼 | ✅ | `engine/audit.ts`（hash 校验和） |
-| 12 | UI 生成（文生图/图生图/文生视频） | 🔶 | 已安装 agnes-ai-image / agnes-ai-video 技能（C:\\Users\\Administrator\\.agents\\skills\\），测试通过 |
+| 12 | UI 生成（文生图/图生图/文生视频） | ✅ | agnes 技能安装+测试通过；media 引擎 + MediaPanel + compony_media 第9工具；3张猫咪皮肤实图已接入 Employee 前端渲染 |
 | 13 | 底层随时兼容 + 按需分配 | 🔶 | 类型系统可扩展，运行时按需 |
 | 14 | 看板 | 🔶 | ui/Dashboard.tsx（燃尽/分支/问题库/审计） |
 | 15 | 每日站会（昨日/今日/阻碍三问） | ✅ | `engine/simulation.ts` dailyStandup |
@@ -130,13 +130,13 @@ compony/
 4. UI 生成（文生图/图生图/文生视频）✅ media 引擎 + MediaPanel + 猫咪皮肤实图
 5. 看板完善（Git commits/Bug 计数/燃尽% 实时）✅ engine/monitor.ts + Dashboard 六格
 6. Lint 自动拦截 + 自动测试守护（红灯不合并）✅ eslint + pre-commit 钩子 + GitHub Actions CI
-7. 技术债 15%-20% 预留机制 🔶（budget 已有，预留比例待加规则）
+7. 技术债 15%-20% 预留机制 ✅（engine/debt.ts debtCompliance）
 
 **P2 — 长期运转**
 8. 配 dsh-cron 每日站会 ✅ scripts/daily-standup.mjs + tick 自动站会
 9. 接 dsh-context 配额仪表盘 ✅ QuotaDashboard 双配额条
-10. 架构物理隔离（微服务仅 API 通信）落地 🔶（部门约束字段已声明）
-11. 交叉审查 + 详尽开发文档自动化 🔶
+10. 架构物理隔离（微服务仅 API 通信）✅（Department.apiOnly）
+11. 交叉审查 + 详尽开发文档自动化 ✅（engine/review.ts + 第10工具）
 
 ---
 
