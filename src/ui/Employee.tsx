@@ -27,7 +27,12 @@ export function EmployeeDesk({ employee: e, task }: { employee: Employee; task?:
           fontSize: 10, color: "#666",
         }}>{e.status === "cooling" ? "… 冷却" : "✦"}</div>
       )}
-      <div style={{ fontSize: 26 }}>{SKINS[e.avatar] ?? SKINS.default}</div>
+      {(e.avatar === "pm_cat" || e.avatar === "dev_cat" || e.avatar === "qa_cat") ? (
+        <img src={"/assets/skins/" + e.avatar + ".png"} alt={e.name}
+             style={{ width: 44, height: 44, objectFit: "cover", borderRadius: 6 }} />
+      ) : (
+        <div style={{ fontSize: 26 }}>{SKINS[e.avatar] ?? SKINS.default}</div>
+      )}
       <div style={{ fontSize: 12, fontWeight: 600 }}>{e.name}</div>
       <div style={{ fontSize: 10, color: deskColor(e.status) }}>{STATUS_ZH[e.status]}</div>
       {noteH > 0 && (
