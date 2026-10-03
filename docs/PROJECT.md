@@ -104,33 +104,39 @@ compony/
 
 ## 四、当前进度与验证结果
 
-- ✅ 引擎 10 模块全部实现，**闭环冒烟测试 13/13 通过**（`engine-smoke.mjs`）
-- ✅ 前端 8 组件 + Vite 入口，已接 `startSimulation` 实时循环 + 站会按钮
-- ✅ DSH 插件骨架完整（8 个 `compony_*` host 工具 + 右侧"公司"Tab）
+- ✅ 引擎 12 模块（含 media/monitor）全部实现，**闭环冒烟测试 15/15 通过**（`engine-smoke.mjs`）
+- ✅ 前端 10 组件（含 MediaPanel/QuotaDashboard）+ Vite 入口，vite build 47 模块通过，已接实时模拟循环 + 站会按钮
+- ✅ DSH 插件完整（9 个 `compony_*` host 工具 + 右侧"公司"Tab），装进 web profile（pnpm link），`~/.compony/state.json` 持久化闭环验证通过
 - ✅ Git 仓库干净推送到 GitHub（39 文件，`git fsck` 无损坏对象）
-- 🔶 待完成（见下方路线图）
+- ✅ P0 完成：dev 依赖装好（130 包），vite build 通过（47 模块），vitest 2/2 + 引擎冒烟 15/15 全绿
+- ✅ P0 完成：dsh-plugin 装进 web profile（pnpm link），9 个 compony_* 工具可导入调用，~/.compony/state.json 持久化闭环验证通过
+- ✅ P1 完成：UI 生成（media 引擎 + MediaPanel + compony_media 工具 + 3 张猫咪皮肤实图）
+- ✅ P1 完成：看板完善（Git commits/Bug 计数/燃尽% 三格实时）
+- ✅ P1 完成：Lint 拦截（eslint 全绿 0err0warn）+ 自动测试守护（pre-commit 钩子 + GitHub Actions CI，红灯不合并）
+- ✅ P2 完成：dsh-cron 每日站会（scripts/daily-standup.mjs + tick 自动站会）
+- ✅ P2 完成：dsh-context 配额仪表盘（QuotaDashboard 双配额条）
 - 🆕 agnes-ai-image / agnes-ai-video 技能已安装并测试通过（文生图✅ / 图生图✅ / 视频⚠️上游队列满）
 
 ---
 
 ## 五、路线图（优先级排序）
 
-**P0 — 让系统真正跑起来**
-1. 装 dev 依赖（react/vite/vitest/tsdown）并 `npm run dev` 起面板验证
-2. 把 `dsh-plugin` 装进 web profile，跑通 8 个 `compony_*` 工具
-3. 持久化 `~/.compony/state.json` 读写闭环
+**P0 — 让系统真正跑起来** ✅ 完成
+1. 装 dev 依赖（react/vite/vitest/tsdown）并 `npm run dev` 起面板验证 ✅
+2. 把 `dsh-plugin` 装进 web profile，跑通 9 个 `compony_*` 工具 ✅（含 compony_media）
+3. 持久化 `~/.compony/state.json` 读写闭环 ✅（STATE_FILE 用 os.homedir 修复）
 
-**P1 — 补齐核心需求**
-4. UI 生成（文生图/图生图/文生视频）✅ 技能已装+测试通过，待接入面板 UI
-5. 看板完善（Git commits 计数 / Bug 计数 / 燃尽图实时）
-6. Lint 自动拦截 + 自动测试守护（红灯不合并）
-7. 技术债 15%-20% 预留机制
+**P1 — 补齐核心需求** ✅ 完成
+4. UI 生成（文生图/图生图/文生视频）✅ media 引擎 + MediaPanel + 猫咪皮肤实图
+5. 看板完善（Git commits/Bug 计数/燃尽% 实时）✅ engine/monitor.ts + Dashboard 六格
+6. Lint 自动拦截 + 自动测试守护（红灯不合并）✅ eslint + pre-commit 钩子 + GitHub Actions CI
+7. 技术债 15%-20% 预留机制 🔶（budget 已有，预留比例待加规则）
 
 **P2 — 长期运转**
-8. 配 dsh-cron 每日站会
-9. 接 dsh-context 配额仪表盘
-10. 架构物理隔离（微服务仅 API 通信）落地
-11. 交叉审查 + 详尽开发文档自动化
+8. 配 dsh-cron 每日站会 ✅ scripts/daily-standup.mjs + tick 自动站会
+9. 接 dsh-context 配额仪表盘 ✅ QuotaDashboard 双配额条
+10. 架构物理隔离（微服务仅 API 通信）落地 🔶（部门约束字段已声明）
+11. 交叉审查 + 详尽开发文档自动化 🔶
 
 ---
 
