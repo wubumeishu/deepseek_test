@@ -1,0 +1,27 @@
+
+import { runCompanyDemo } from "./src/engine/index.ts";
+import { canSpend } from "./src/engine/budget.ts";
+const s = runCompanyDemo();
+const A = (c, m) => { if (!c) { console.log("FAIL:", m); process.exitCode = 1; } else console.log("ok:", m); };
+A(Object.keys(s.employees).length === 5, "5 名员工");
+A(Object.keys(s.departments).length === 5, "5 个部门");
+A(!!s.departments.backend.headId, "后端部有负责人 " + s.employees[s.departments.backend.headId]?.name);
+A(!!s.departments.qa.headId, "测试部有负责人 " + s.employees[s.departments.qa.headId]?.name);
+const login = Object.values(s.tasks).find(t => t.title === "登录模块");
+A(!!login.assignee, "登录模块拆解到 " + s.employees[login.assignee]?.name);
+A(login.branch?.startsWith("feat/"), "拆解时拉出 git 分支 " + login.branch);
+A(login.pr?.status === "merged", "PR 强制审查后合并");
+A(s.git.trunk.startsWith("main@rev"), "主干推进");
+A(Object.values(s.meetings)[0].minutes.length === 3, "会议 3 条跨部门纪要");
+A(s.pitfalls.length === 1 && s.pitfalls[0].title.includes("OAuth"), "踩坑已沉淀");
+A(s.burndown.total === 8, "总故事点 8");
+A(!!s.audit.find(a => a.action === "backup")?.checksum, "备份校验和");
+s.budget.usedMin = 150; s.budget.resetMinAt = 0; s.budget.resetBurstAt = 0;
+A(canSpend(s, 10) === true, "窗口内可再花 10");
+A(canSpend(s, 20) === false, "超额被拦");
+console.log("\n=== 引擎闭环 " + (process.exitCode ? "失败" : "全部通过 (15/15)") + " ===");
+console.log("员工:", Object.values(s.employees).map(e => e.name + "(" + e.status + ")").join(", "));
+console.log("任务:", Object.values(s.tasks).map(t => t.title + "[" + t.status + "]").join("; "));
+console.log("分支:", JSON.stringify(Object.keys(s.git.branches)));
+console.log("踩坑:", s.pitfalls.map(p => p.title).join(", "));
+console.log("审计条数:", s.audit.length);

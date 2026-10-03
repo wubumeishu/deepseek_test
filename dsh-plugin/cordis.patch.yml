@@ -1,0 +1,3 @@
+# compony plugin loader patch
+- id: compony
+  enabled: true

@@ -1,0 +1,11 @@
+import { runCompanyDemo } from "./engine";
+const s = runCompanyDemo();
+console.log("员工:", Object.values(s.employees).map(e => e.name + "(" + e.status + ")").join(", "));
+console.log("部门:", Object.values(s.departments).map(d => d.name).join(", "));
+console.log("任务:", Object.values(s.tasks).map(t => t.title + " -> " + (t.assignee ? s.employees[t.assignee]?.name : "未分配") + " [" + t.status + "]").join("; "));
+console.log("分支:", Object.keys(s.git.branches).join(", "), "主干:", s.git.trunk);
+console.log("PR:", Object.values(s.tasks).find(t => t.pr)?.pr?.status);
+console.log("会议:", Object.values(s.meetings).map(m => m.title + " " + m.minutes.length + "条纪要").join("; "));
+console.log("问题库:", s.pitfalls.map(p => p.title).join(", "));
+console.log("燃尽:", JSON.stringify(s.burndown));
+console.log("审计条数:", s.audit.length, "备份:", s.audit.find(a => a.action === "backup")?.checksum);

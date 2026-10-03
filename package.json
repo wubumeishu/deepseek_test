@@ -1,0 +1,13 @@
+{
+  "name": "compony",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "公司多智能体协同系统（DSH 插件 + 前端面板）",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsdown dsh-plugin",
+    "test": "vitest run",
+    "smoke": "node --experimental-strip-types engine-smoke.mjs"
+  }
+}
