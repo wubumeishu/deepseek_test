@@ -1,22 +1,38 @@
-// Compony HTTP 服务层：零第三方依赖（Node 内置 http），挂载 engine。
+// Compony HTTP 服务层：零第三方依赖（Node 内置 http + node:sqlite），挂载 engine。
+// M3：持久化（SQLite）+ 宿主解耦（DSH 不再是宿主，服务端可独立运行）。
 // 端点：
-//   GET  /api/state        读取当前 CompanyState
-//   POST /api/actions/:name  驱动一个领域动作（hire / task / standup / ...）
-//   GET  /api/events       SSE 流（每次动作 / tick 后推送 state 快照）
-//   GET  /api/health       健康检查
+//   GET  /api/state                 读取会话 CompanyState（?session=<id>）
+//   POST /api/actions/:name         驱动一个领域动作（hire / task / standup / ...）
+//   GET  /api/events                SSE 流（每次动作 / tick 后推送 state 快照）
+//   GET  /api/health                健康检查
+//   POST   /api/sessions/:id/backup  快照备份（可回溯）
+//   DELETE /api/sessions/:id         删除会话
+// 持久化：每个 sessionId 落到 compony.sqlite；新会话首次访问用 runCompanyDemo() 种子。
 import { createServer } from "node:http";
 import {
   runCompanyDemo, dailyStandup, startSimulation, DEFAULT_SIM,
   hireEmployee, createTask, formTeam, startMeeting, recordPitfall, crossReview,
 } from "../../../packages/engine/src/index.ts";
 import type { CompanyState } from "../../../packages/protocol/src/index.ts";
+import { SqliteStore } from "./store-sqlite.ts";
 
-// 会话隔离最小实现：sessionId -> 独立 state
+// 持久化端口：SQLite 适配器（宿主无关，零第三方依赖）
+const store = new SqliteStore({ filePath: process.env.COMPONY_DB ?? "compony.sqlite" });
+
+// 会话隔离 + 持久化：sessionId -> 独立 state（首次从 DB 加载，无则种子并落盘）
 const sessions = new Map<string, CompanyState>();
 function getSession(id?: string): CompanyState {
   const key = id ?? "default";
-  if (!sessions.has(key)) sessions.set(key, runCompanyDemo());
-  return sessions.get(key)!;
+  if (sessions.has(key)) return sessions.get(key)!;
+  let s = store.load(key);
+  if (!s) { s = runCompanyDemo(); }
+  sessions.set(key, s);
+  store.save(key, s);
+  return s;
+}
+function persist(key: string): void {
+  const s = sessions.get(key);
+  if (s) store.save(key, s);
 }
 
 // SSE 广播器
@@ -57,23 +73,31 @@ function applyAction(sessionId: string, name: string, payload: any): { ok: boole
     default:
       return { ok: false, message: "unknown action: " + name };
   }
+  persist(sessionId);
   broadcast(sessionId, s);
   return { ok: true };
 }
 
-// 后台模拟 tick：每 5s 推进一次并广播
+// 后台模拟 tick：每 5s 推进一次并广播（default 会话）
 const simStop = startSimulation(getSession("default"), () => {
+  persist("default");
   broadcast("default", getSession("default"));
 }, DEFAULT_SIM);
 process.on("SIGINT", simStop);
 
+function sessionRefFrom(parts: string[]): string | null {
+  // /api/sessions/<id> 或 /api/sessions/<id>/backup
+  return parts.length >= 4 && parts[1] === "api" && parts[2] === "sessions" ? parts[3] : null;
+}
+
 const server = createServer((req, res) => {
   const url = new URL(req.url ?? "/", "http://127.0.0.1");
+  const parts = url.pathname.split("/").filter(Boolean);
   const sessionId = url.searchParams.get("session") ?? "default";
 
   if (url.pathname === "/api/health") {
     res.writeHead(200, { "content-type": "application/json" });
-    res.end(JSON.stringify({ ok: true, sessions: sessions.size }));
+    res.end(JSON.stringify({ ok: true, sessions: sessions.size, persisted: true }));
     return;
   }
 
@@ -83,8 +107,7 @@ const server = createServer((req, res) => {
     return;
   }
 
-  // 匹配 /api/actions/<name>
-  const parts = url.pathname.split("/");
+  // POST /api/actions/<name>
   if (parts.length === 4 && parts[1] === "api" && parts[2] === "actions" && req.method === "POST") {
     const actionName = parts[3];
     let body = "";
@@ -96,6 +119,26 @@ const server = createServer((req, res) => {
       res.writeHead(result.ok ? 200 : 400, { "content-type": "application/json" });
       res.end(JSON.stringify({ sessionId, ...result }));
     });
+    return;
+  }
+
+  // POST /api/sessions/<id>/backup
+  const sessId = sessionRefFrom(parts);
+  if (sessId && parts.length === 5 && parts[4] === "backup" && req.method === "POST") {
+    const s = getSession(sessId);
+    const id = store.backup(s);
+    persist(sessId);
+    res.writeHead(200, { "content-type": "application/json" });
+    res.end(JSON.stringify({ sessionId: sessId, backupId: id, backups: store.listBackups().length }));
+    return;
+  }
+
+  // DELETE /api/sessions/<id>
+  if (sessId && parts.length === 4 && req.method === "DELETE") {
+    sessions.delete(sessId);
+    store.delete(sessId);
+    res.writeHead(200, { "content-type": "application/json" });
+    res.end(JSON.stringify({ deleted: sessId }));
     return;
   }
 
@@ -123,7 +166,10 @@ const server = createServer((req, res) => {
 
 const PORT = Number(process.env.COMPONY_PORT ?? 4174);
 server.listen(PORT, "127.0.0.1", () => {
-  console.log("Compony API 服务已启动: http://127.0.0.1:" + PORT + "/api/state");
+  console.log("Compony API 服务已启动（M3 持久化）: http://127.0.0.1:" + PORT + "/api/state");
 });
 
+process.on("SIGTERM", () => { try { store.close(); } catch {} process.exit(0); });
+
 export default server;
+export { store, sessions };

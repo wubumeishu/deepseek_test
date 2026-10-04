@@ -1,0 +1,8 @@
+{
+  "name": "@compony/adapter-http",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "port.ts",
+  "description": "HTTP 领域能力端口：10 个领域能力 <-> REST 路由映射"
+}

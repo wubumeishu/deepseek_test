@@ -136,3 +136,36 @@ describe("架构契约：src/api.ts 导出必备 API 函数（M2.3）", () => {
     expect(src).toContain("export function subscribeEvents");
   });
 });
+
+// ── M3 架构契约：宿主解耦 + 持久化端口 ─────────────────────────
+describe("架构契约：engine 保持零 IO（宿主解耦）", () => {
+  const engineDir = path.resolve(srcDir, "../packages/engine/src");
+  const engineFiles = walk(engineDir).filter((f) => !f.includes("__tests__"));
+  it.each(engineFiles)("engine 文件不得 import node:fs/os/child_process: %s", (f) => {
+    const src = fs.readFileSync(f, "utf8");
+    expect(src).not.toMatch(/from\s*["']node:(fs|os|child_process|http)/);
+  });
+});
+
+describe("架构契约：StateStore 端口在 protocol 中定义", () => {
+  it("protocol 导出 StateStore 接口（load/save）", () => {
+    const proto = fs.readFileSync(path.resolve(srcDir, "../packages/protocol/src/index.ts"), "utf8");
+    expect(proto).toContain("export interface StateStore");
+    expect(proto).toContain("load(sessionId: string)");
+    expect(proto).toContain("save(sessionId: string, state: CompanyState)");
+  });
+});
+
+describe("架构契约：服务端用 SQLite 持久化（不依赖宿主）", () => {
+  const serverDir = path.resolve(srcDir, "../apps/server/src");
+  it("server 实现 StateStore 端口（SqliteStore）", () => {
+    const store = fs.readFileSync(path.join(serverDir, "store-sqlite.ts"), "utf8");
+    expect(store).toContain("implements StateStore");
+    expect(store).toContain("node:sqlite");
+  });
+  it("server 的 getSession 先查 store.load（持久化）", () => {
+    const idx = fs.readFileSync(path.join(serverDir, "index.ts"), "utf8");
+    expect(idx).toContain("store.load");
+    expect(idx).toContain("store.save");
+  });
+});

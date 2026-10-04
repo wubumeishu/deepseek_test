@@ -128,3 +128,15 @@ export interface MediaAsset {
   createdById?: string;   // 哪位"员工"生成的
   createdAt: number;
 }
+
+// ── M3 持久化端口 ────────────────────────────────────────────────
+// 会话状态存储的宿主无关抽象。engine 保持零 IO；
+// 谁负责落盘（DSH host 的 JSON / 服务端的 SQLite / 内存）由适配器决定。
+export interface StateStore {
+  /** 读取会话状态；不存在返回 null（调用方决定是否 seed） */
+  load(sessionId: string): Promise<CompanyState | null> | CompanyState | null;
+  /** 写入（upsert）会话状态 */
+  save(sessionId: string, state: CompanyState): Promise<void> | void;
+  /** 可选：删除会话 */
+  delete?(sessionId: string): Promise<void> | void;
+}
