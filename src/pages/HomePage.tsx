@@ -3,6 +3,7 @@ import { useCompanyState } from "../state/companyStore";
 
 export default function HomePage() {
   const s = useCompanyState();
+  if (!s) return <div className="empty-page">正在加载公司状态…</div>;
   const tasks = Object.values(s.tasks);
   const done = tasks.filter(t => t.status === "done").length;
   const depts = Object.values(s.departments);
@@ -10,7 +11,7 @@ export default function HomePage() {
   return (
     <>
       <div className="page-header">
-        <h2>总览</h2><span className="sub">公司运转快照（不随路由切换丢失）</span>
+        <h2>总览</h2><span className="sub">公司运转快照（API 实时同步）</span>
       </div>
       <div className="panel">
         <h3>关键指标</h3>

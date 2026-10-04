@@ -104,10 +104,35 @@ describe("架构契约：hooks 必须从 react 导入", () => {
   });
 });
 
-describe("架构契约：状态层订阅引擎 tick", () => {
-  it("companyStore.ts 使用 useSyncExternalStore", () => {
+describe("架构契约：状态层经 API 同步（M2.3）", () => {
+  it("companyStore.ts 使用 useSyncExternalStore + fetchState（不再直接 import engine）", () => {
     const src = fs.readFileSync(path.join(srcDir, "state", "companyStore.ts"), "utf8");
     expect(src).toContain("useSyncExternalStore");
-    expect(src).toContain("runCompanyDemo");
+    expect(src).toContain("fetchState");
+    expect(src).not.toContain("runCompanyDemo");
+  });
+});
+
+describe("架构契约：面板禁止直接 import engine（M2.3 API-only）", () => {
+  const panelFiles = walk(srcDir).filter(f => {
+    const rel = path.relative(srcDir, f).replace(/\\/g, "/");
+    return (rel.startsWith("ui/") || rel.startsWith("pages/")) && !f.includes("__tests__");
+  });
+  it("src/ui/* 与 src/pages/* 中不得 import engine", () => {
+    const violations: string[] = [];
+    for (const file of panelFiles) {
+      const src = fs.readFileSync(file, "utf8");
+      if (hasEngineImport(src)) violations.push(path.relative(srcDir, file));
+    }
+    expect(violations, "直接 import engine: \n" + violations.join("\n")).toHaveLength(0);
+  });
+});
+
+describe("架构契约：src/api.ts 导出必备 API 函数（M2.3）", () => {
+  it("api.ts 必须导出 fetchState / postAction / subscribeEvents", () => {
+    const src = fs.readFileSync(path.join(srcDir, "api.ts"), "utf8");
+    expect(src).toContain("export async function fetchState");
+    expect(src).toContain("export async function postAction");
+    expect(src).toContain("export function subscribeEvents");
   });
 });

@@ -5,6 +5,7 @@ import { useCompanyState, dispatch } from "../state/companyStore";
 
 export default function MeetingsPage() {
   const s = useCompanyState();
+  if (!s) return <div className="empty-page">正在加载公司状态…</div>;
   return (
     <>
       <div className="page-header"><h2>会议室</h2><span className="sub">跨部门讨论 + 敏捷小队</span></div>

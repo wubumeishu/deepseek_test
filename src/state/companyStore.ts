@@ -1,18 +1,14 @@
-// 中央状态层：引擎 CompanyState 提升到模块级，用 useSyncExternalStore 订阅。
-// 替代旧的 setState({...}) 手工重刷——路由切换 / tick 推进都不丢状态。
+// M2.3 中央状态层（API-only）：不再 import engine。
+// 初值由 api.ts fetchState() 拉取；后续状态更新走 SSE subscribeEvents()。
+// UI 状态（simRunning / standupLines / theme / apiReady / apiError）仍用 Zustand。
+// 组件用 useCompanyState() 读 CompanyState，用 dispatch() 发动作。
 import { useEffect, useSyncExternalStore } from "react";
 import { create } from "zustand";
-import {
-  runCompanyDemo, startSimulation, dailyStandup, DEFAULT_SIM,
-  formTeam, dissolveTeam, startMeeting, addMinute, endMeeting,
-  recordMedia, crossReview,
-} from "../engine";
 import type { CompanyState } from "../types";
+import { fetchState, postAction, subscribeEvents, healthCheck } from "../api";
 
-// ---- 引擎状态（模块级单例）----
-export const engineState: CompanyState = runCompanyDemo();
-
-let stopSim: (() => void) | undefined;
+// ---- API 状态（模块级单例）----
+let state: CompanyState | null = null;
 let version = 0;
 const listeners = new Set<() => void>();
 
@@ -20,89 +16,88 @@ function emit() {
   version++;
   for (const l of listeners) l();
 }
+
 export function subscribe(fn: () => void): () => void {
   listeners.add(fn);
   return () => { listeners.delete(fn); };
 }
-export function getState(): CompanyState { return engineState; }
+export function getState(): CompanyState | null { return state; }
 export function getSnapshot(): number { return version; }
+export function isReady(): boolean { return state !== null; }
+
+// 初始化：拉取首屏 state（必须在组件 mount 后调用一次）
+export async function initCompany(): Promise<void> {
+  if (state) return; // 已初始化
+  state = await fetchState();
+  emit();
+}
+
+// SSE 持续订阅（在模块顶层调用一次，避免重复连接）
+let sseCleanup: (() => void) | null = null;
+export function startSSE(): void {
+  if (sseCleanup) return;
+  sseCleanup = subscribeEvents(
+    (newState) => { state = newState; emit(); },
+  );
+}
+export function stopSSE(): void {
+  if (sseCleanup) { sseCleanup(); sseCleanup = null; }
+}
 
 // ---- UI 状态（Zustand）----
 interface UIState {
   simRunning: boolean;
   standupLines: string[];
   theme: "light" | "dark";
+  apiReady: boolean;
+  apiError: string | null;
+  markApiReady: () => void;
+  setApiError: (msg: string) => void;
   startSim: () => void;
   stopSim: () => void;
   setStandupLines: (lines: string[]) => void;
   toggleTheme: () => void;
 }
 
-export const useUI = create<UIState>((set, get) => ({
+export const useUI = create<UIState>((set) => ({
   simRunning: false,
   standupLines: [],
   theme: "light",
-  startSim: () => {
-    if (get().simRunning) return;
-    stopSim = startSimulation(engineState, () => emit(), DEFAULT_SIM);
-    set({ simRunning: true });
-  },
-  stopSim: () => {
-    stopSim?.();
-    stopSim = undefined;
-    set({ simRunning: false });
-  },
+  apiReady: false,
+  apiError: null,
+  markApiReady: () => set({ apiReady: true, apiError: null }),
+  setApiError: (msg) => set({ apiError: msg }),
+  startSim: () => set({ simRunning: true }),
+  stopSim: () => set({ simRunning: false }),
   setStandupLines: (lines) => set({ standupLines: lines }),
   toggleTheme: () => set((s) => ({ theme: s.theme === "light" ? "dark" : "light" })),
 }));
 
-// ---- dispatch：动作统一走这里，改完引擎后 emit ----
-export function dispatch(action: string, payload?: any) {
+// ---- dispatch：动作统一走 API ----
+export async function dispatch(action: string, payload?: any): Promise<void> {
   switch (action) {
-    case "standup": {
-      const lines = dailyStandup(engineState);
-      useUI.getState().setStandupLines(lines.length ? lines : ["（无进行中任务）"]);
-      emit();
+    case "standup":
+      await postAction("standup", {}, payload?.sessionId);
       break;
-    }
     case "start_meeting":
-      startMeeting(engineState, payload?.title ?? "新会议", payload?.participants ?? []);
-      emit();
-      break;
-    case "add_minute":
-      addMinute(engineState, payload?.meetingId, payload?.employeeId, payload?.text ?? "（发言）");
-      emit();
-      break;
-    case "end_meeting":
-      if (payload) {
-        endMeeting(engineState, payload);
-        emit();
-      }
+      await postAction("start_meeting", { title: payload?.title, participants: payload?.participants ?? [] }, payload?.sessionId);
       break;
     case "form_team":
-      formTeam(engineState, payload?.name ?? "新小队", payload?.ownerTask ?? "", payload?.composition ?? { lead: 1, designer: 1, frontend: 1, qa: 1 });
-      emit();
-      break;
-    case "dissolve_team":
-      dissolveTeam(engineState, payload);
-      emit();
-      break;
-    case "record_media":
-      recordMedia(engineState, { kind: payload?.kind ?? "image", prompt: payload?.prompt ?? "", url: payload?.url ?? "", model: payload?.model ?? "agnes" });
-      emit();
+      await postAction("form_team", { name: payload?.name, ownerTask: payload?.ownerTask, composition: payload?.composition }, payload?.sessionId);
       break;
     case "cross_review":
-      crossReview(engineState, payload?.taskId, payload?.reviewerId, payload?.approved, payload?.note);
-      emit();
+      await postAction("cross_review", { taskId: payload?.taskId, reviewerId: payload?.reviewerId, approved: payload?.approved, note: payload?.note }, payload?.sessionId);
       break;
     default:
-      emit();
       break;
   }
 }
 
-// 引擎状态经 useSyncExternalStore 订阅：tick 推进 → emit → 组件自动刷新
-export function useCompanyState(): CompanyState {
+// 健康检查（可选，用于诊断）
+export { healthCheck };
+
+// 引擎状态经 useSyncExternalStore 订阅：SSE tick → emit → 组件自动刷新
+export function useCompanyState(): CompanyState | null {
   useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
   return getState();
 }
