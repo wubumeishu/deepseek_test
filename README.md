@@ -99,6 +99,24 @@ docker run -d -p 4173:4173 -p 4174:4174 -v compony-data:/data compony
 
 ---
 
+## 截图
+
+各路由真实渲染（jsdom 验证 7/7，DOM 1068 字节 / 36 元素 / 0 运行时错误）：
+
+| 路由 | 截图 | 说明 |
+|---|---|---|
+| `/` | [首页](screenshots/home.png) | 总览 + 每日站会 |
+| `/building` | [大楼](screenshots/building.png) | 大楼 / 工位 / 猫咪员工 |
+| `/tasks` | [任务看板](screenshots/tasks.png) | 燃尽 / 分支 / 问题库 / 审计 |
+| `/meetings` | [会议室](screenshots/meetings.png) | 跨部门讨论 |
+| `/coffee` | [咖啡室](screenshots/coffee.png) | 模型冷却休息室 |
+| `/quota` | [资源配额](screenshots/quota.png) | 160/分钟 + 1500/5h |
+| `/media` | [媒体生成](screenshots/media.png) | 文生图 / 图生图 / 文生视频 |
+
+> 截图目录 `screenshots/` 含 `README.md` 说明生成方式；首版待补 PNG 文件。
+
+---
+
 ## 领域能力（10 个，端口化）
 
 | 能力 | 引擎入口 | HTTP 路由 | 说明 |
