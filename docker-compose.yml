@@ -1,0 +1,19 @@
+# Compony 一键交付（M4）：单容器起完整公司协同平台
+services:
+  compony:
+    build: .
+    image: compony:latest
+    ports:
+      - "4173:4173"   # 面板（含 /api 反向代理到 4174）
+      - "4174:4174"   # API + SSE
+    volumes:
+      - compony-data:/data   # SQLite 持久化
+    environment:
+      - COMPONY_DB=/data/compony.sqlite
+      - COMPONY_PORT=4174
+      - PORT=4173
+      - COMPONY_API_PORT=4174
+    restart: unless-stopped
+
+volumes:
+  compony-data:
