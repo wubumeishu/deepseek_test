@@ -37,31 +37,31 @@
 
 | # | 需求 | 状态 | 实现位置 |
 |---|---|---|---|
-| 1 | 项目排期 / 版本管理 | 🔶 | 任务状态机 + burndown（燃尽条） |
-| 2 | HR 招聘 + 新人培训 + 提前设置招聘条件 | ✅ | `engine/company.ts` hireEmployee/trainEmployee |
-| 3 | 首页大楼/小房间（随员工数+部门数缩放） | ✅ | `ui/BuildingView.tsx` |
-| 4 | 员工猫咪皮肤 + 思考泡泡 + 工位展示 | ✅ | `ui/Employee.tsx`（SKINS + 泡泡） |
-| 5 | 咖啡室/休息室（模型冷却） | ✅ | `ui/CoffeeRoom.tsx` |
-| 6 | 会议室（跨部门讨论，独立于任务分配） | ✅ | `ui/MeetingRoom.tsx` + engine/meeting.ts |
+| 1 | 项目排期 / 版本管理 | 🔶 | 任务状态机 + burndown（燃尽条）；版本管理字段已声明，运行时按任务状态驱动 |
+| 2 | HR 招聘 + 新人培训 + 提前设招聘条件 | ✅ | `engine/company.ts` hireEmployee/trainEmployee |
+| 3 | 首页大楼 / 小房间（随员工数与部门数缩放） | ✅ | `ui/BuildingView.tsx` |
+| 4 | 员工猫咪皮肤 + 思考气泡 + 工位展示 | ✅ | `ui/Employee.tsx`（SKINS + 泡泡） |
+| 5 | 咖啡室 / 休息室（模型冷却） | ✅ | `ui/CoffeeRoom.tsx` |
+| 6 | 会议室（跨部门讨论，独立于任务分配） | ✅ | `engine/meeting.ts` |
 | 7 | 任务分配：部门 → 拆解到员工 | ✅ | `engine/taskboard.ts` |
-| 8 | 敏捷小队横向抽调（1PM+1UI+3开发+1测试） | ✅ | `engine/agile.ts` + ui/AgileBoard.tsx |
-| 9 | 休息/工作状态 + 桌上本子高度显示待办 token | ✅ | `ui/Employee.tsx`（estTokens/1000 → 本子高度） |
+| 8 | 敏捷小队横向抽调（1PM+1UI+3开发+1测试） | ✅ | `engine/agile.ts` + `ui/AgileBoard.tsx` |
+| 9 | 休息 / 工作状态 + 本子高度显示待办 token | ✅ | `ui/Employee.tsx`（estTokens/1000 → 本子高度） |
 | 10 | 问题库（踩坑沉淀） | ✅ | `engine/memory.ts` |
-| 11 | 日志可回溯 + 备份防捣蛋鬼 | ✅ | `engine/audit.ts`（hash 校验和） |
-| 12 | UI 生成（文生图/图生图/文生视频） | ✅ | 文生图✅(猫咪皮肤3张) / 图生图✅ / 文生视频✅(2.5-flash 猫咪打字片段,上游队列已恢复)；media 引擎 + MediaPanel + 第9工具 |
-| 13 | 底层随时兼容 + 按需分配 | 🔶 | 类型系统可扩展，运行时按需 |
-| 14 | 看板 | 🔶 | ui/Dashboard.tsx（燃尽/分支/问题库/审计） |
-| 15 | 每日站会（昨日/今日/阻碍三问） | ✅ | `engine/simulation.ts` dailyStandup |
-| 16 | 自动化监控（Git commits/Bug数/燃尽图） | 🔶 | burndown 有；commits/bug 计数待接 |
-| 17 | 强制代码审查（PR 经资深审查、可打回） | ✅ | `engine/gitflow.ts` reviewPR |
-| 18 | 资源有限配额（160/分钟 + 1500/5h 可叠加） | ✅ | `engine/budget.ts` canSpend |
-| 19 | 分支管理（隔离、冲突手动解决、绝不覆盖） | ✅ | `engine/gitflow.ts` detectConflict |
-| 20 | 强制 PR/Lint 自动化拦截 | 🔶 | PR 有；Lint 拦截未实现 |
-| 21 | 自动测试守护（红灯不合并） | 🔶 | 测试框架就绪；CI 拦截未接 |
-| 22 | 架构物理隔离（微服务仅经 API 通信） | 🔶 | 部门约束字段声明；运行隔离待实现 |
-| 23 | 技术债 15%-20% 预留 | ⬜ | 未实现 |
-| 24 | 详尽开发文档 + 交叉审查 | 🔶 | 本文档 + README；交叉审查流程待接 |
-| 25 | 部门可编辑自定义 + 模板系统 + 负责人查看 agent | ✅ | `engine/company.ts` editDepartment/DEPT_TEMPLATES/setDepartmentHead |
+| 11 | 日志可回溯 + 备份防误操作 | ✅ | `engine/audit.ts`（hash 校验和） |
+| 12 | UI 生成（文生图 / 图生图 / 文生视频） | ✅ | `engine/media.ts` + agnes 技能 |
+| 13 | 底层随时兼容新模块 + 按需分配 | 🔶 | 类型系统可扩展（protocol 可追加字段），运行时按需分配待完善 |
+| 14 | 任务看板视图 | 🔶 | `ui/Dashboard.tsx` + `ui/AgileBoard.tsx`（燃尽/分支/问题库/审计） |
+| 15 | 每日站会（昨日 / 今日 / 阻碍 三问） | ✅ | `engine/simulation.ts` dailyStandup |
+| 16 | 自动化监控（commits / bug 数 / 燃尽图） | ✅ | `engine/monitor.ts`（commitCount/bugCount/burndownPct） |
+| 17 | 强制代码审查（可打回） | ✅ | `engine/gitflow.ts` reviewPR |
+| 18 | 资源配额（160/分钟 + 1500/5小时，可叠加） | ✅ | `engine/budget.ts` canSpend |
+| 19 | 分支管理（冲突手动解决，绝不覆盖） | ✅ | `engine/gitflow.ts` detectConflict |
+| 20 | 强制 PR / Lint 自动化拦截 | ✅ | `.github/workflows/ci.yml` 红灯不合并 + pre-commit 钩子 |
+| 21 | 自动测试守护（红灯不合并） | ✅ | CI verify workflow + pre-commit `test:full` |
+| 22 | 架构物理隔离（微服务仅经 API 通信） | ✅ | M2/M3：`apps/web` 不 import engine，全经 HTTP；`adapters/http` 10 能力端口 |
+| 23 | 技术债预留 15%–20% | ✅ | `engine/debt.ts`（debtReserve 15%-20% 区间 + recordDebtTask + debtCompliance） |
+| 24 | 详尽开发文档 + 频繁交叉审查 | ✅ | `docs/` + `engine/review.ts` crossReview + AGENTS.md × 6 |
+| 25 | 部门可编辑 + 模板系统 + 负责人查看 agent | ✅ | `engine/company.ts` editDepartment/DEPT_TEMPLATES/setDepartmentHead |
 
 ---
 

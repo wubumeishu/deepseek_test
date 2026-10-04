@@ -1,22 +1,39 @@
-name: CI 测试守护
+# 自动测试守护 —— 红灯不合并（M4）
+#
+# 跑 L1 全链：lint + vitest(契约/单元/持久化) + 引擎冒烟 + 面板构建渲染。
+# 任一步红灯则整个 PR 失败，拦截合并（对应需求 #20/#21）。
+
+name: verify
+
 on:
-  push: { branches: [main] }
-  pull_request: { branches: [main] }
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  test:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 24, cache: npm }
-      - run: npm ci || npm install
-      # 红灯拦截：lint + 单元测试 + 引擎冒烟
-      - run: npm run test:full
-      # DSH 插件可构建
-      - run: npm run build --if-present
-      # 前端面板：构建 + jsdom 真实渲染冒烟（防"打包成功但运行时白屏"）
-      - run: npm run verify:panel
-      - name: 上传产物（可选验证）
-        if: always()
-        run: ls -R dist || true
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install deps
+        run: npm install --no-audit --no-fund || npm install --no-audit --no-fund --legacy-peer-deps
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit + contract + persistence tests
+        run: npm run test
+
+      - name: Engine smoke (15/15)
+        run: npm run smoke
+
+      - name: Panel build + render smoke
+        run: npm run verify:panel
