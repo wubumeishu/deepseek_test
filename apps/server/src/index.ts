@@ -92,7 +92,7 @@ function sessionRefFrom(parts: string[]): string | null {
 
 const server = createServer((req, res) => {
   const url = new URL(req.url ?? "/", "http://127.0.0.1");
-  const parts = url.pathname.split("/").filter(Boolean);
+  const parts = url.pathname.split("/");
   const sessionId = url.searchParams.get("session") ?? "default";
 
   if (url.pathname === "/api/health") {
