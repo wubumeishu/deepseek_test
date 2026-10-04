@@ -1,0 +1,9 @@
+{
+  "name": "@compony/engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "description": "纯领域逻辑引擎：公司/任务板/敏捷/评审/债务/配额/媒体，零依赖零 IO"
+}

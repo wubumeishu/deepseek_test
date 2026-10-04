@@ -1,0 +1,9 @@
+{
+  "name": "@compony/protocol",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "description": "共享类型 + HTTP 契约（CompanyState 及 9 个子类型，engine 与 server 与 web 共用）"
+}

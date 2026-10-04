@@ -1,0 +1,13 @@
+{
+  "name": "compony-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "description": "HTTP + SSE 服务层：挂载 engine，提供 GET /api/state、POST /api/actions/:name、GET /api/events",
+  "scripts": { "start": "node --experimental-strip-types src/index.ts" },
+  "dependencies": {
+    "@compony/engine": "workspace:*",
+    "@compony/protocol": "workspace:*"
+  }
+}

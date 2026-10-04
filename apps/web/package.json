@@ -1,0 +1,7 @@
+{
+  "name": "compony-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "前端面板：只消费 API，不再 import engine（M2.3 迁移）"
+}

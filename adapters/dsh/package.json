@@ -1,0 +1,12 @@
+{
+  "name": "@compony/adapter-dsh",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/host/index.js",
+  "exports": { ".": "./src/host/index.js", "./client": "./src/web/client.js", "./package.json": "./package.json" },
+  "description": "DSH 适配器：10 个 compony_* host 工具 + 右侧栏公司 Tab",
+  "dependencies": {
+    "@compony/engine": "workspace:*"
+  }
+}
