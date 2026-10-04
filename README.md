@@ -21,6 +21,17 @@ Compony 不是 DSH 插件了。它是一个**可独立部署的多智能体协�
 ---
 
 ## 一键启动
+### 方式 0：最快一条命令（无需 Docker）
+
+```bash
+git clone https://github.com/wubumeishu/deepseek_test compony
+cd compony
+npm install
+npm start        # 起 API(4174) + 面板(4173 含 /api 代理) + SQLite 持久化
+```
+
+浏览器打开 **http://127.0.0.1:4173/** 即可。
+
 
 ### 方式 A：本地 Node 24
 

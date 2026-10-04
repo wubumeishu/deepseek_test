@@ -15,7 +15,8 @@
     "smoke": "node --experimental-strip-types engine-smoke.mjs",
     "start:api": "node --experimental-strip-types apps/server/src/index.ts",
     "lint": "eslint src --no-warn-ignored",
-    "test:full": "npm run lint && npm run test && npm run smoke"
+    "test:full": "npm run lint && npm run test && npm run smoke",
+    "start": "node start-compony.mjs"
   },
   "dependencies": {
     "@compony/engine": "workspace:*",
