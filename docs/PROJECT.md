@@ -268,3 +268,24 @@ import { useEffect, useState } from "react";
 
 > 注意：`npm run build` 构建的是 DSH 插件（tsdown），**不是**前端面板；
 > 面板请用 `npm run build:panel`。
+
+---
+
+## M3 · 持久化 + 宿主解耦（已完成 · commit 2dc12f1）
+
+- **SQLite 持久化**：`apps/server/src/store-sqlite.ts` 用 Node 24 内置 `node:sqlite` 实现 `StateStore` 端口，零第三方依赖
+- **会话隔离**：`sessionId -> 独立 state`，动作 / 模拟 tick 后 `persist()` 落盘
+- **宿主解耦**：DSH 降级为可选消费者；HTTP API 是默认宿主；`adapters/http` 声明 10 个领域能力 <-> REST 路由
+- **验证**：vitest 3 个持久化用例 + L3 重启保留 + 会话隔离 全通过
+
+## M4 · 交付工程化（已完成 · commit e12b7ec）
+
+- **Dockerfile**：单容器起完整平台（API 4174 + 面板 4173 + SQLite 数据卷）
+- **docker-compose.yml**：`docker compose up -d` 一键起容器
+- **deploy/nginx.conf**：反向代理配置
+- **LICENSE / CONTRIBUTING.md / AGENTS.md × 6**：开源门面 + 分层协作契约
+- **README.md**：重写为前端门（定位 + 一键启动 + 架构图 + 10 能力表 + 测试矩阵 + 刻意不做）
+- **static-server.mjs**：增加 `/api` 反向代理到 API 服务（4173 一体服务）
+
+**最终状态**：全新机器 `git clone` → `docker compose up -d` → 浏览器打开 4173 即可驱动公司流程。
+测试矩阵：smoke 15/15 · lint 0/0 · vitest 38/38 · panel build ✓ · L3 持久化全通过。
