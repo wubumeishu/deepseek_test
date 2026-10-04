@@ -6,7 +6,7 @@
   "description": "公司多智能体协同系统（DSH 插件 + 前端面板）",
   "scripts": {
     "dev": "vite",
-    "build": "tsdown dsh-plugin",
+    "build": "tsdown adapters/dsh",
     "build:panel": "vite build",
     "serve:panel": "node static-server.mjs",
     "check:render": "node scripts/render-check.mjs",

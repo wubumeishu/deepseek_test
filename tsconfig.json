@@ -10,6 +10,6 @@
   },
   "include": [
     "src",
-    "dsh-plugin/src"
+    "adapters/dsh/src"
   ]
 }

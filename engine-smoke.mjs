@@ -1,6 +1,5 @@
-
-import { runCompanyDemo } from "./src/engine/index.ts";
-import { canSpend } from "./src/engine/budget.ts";
+import { runCompanyDemo } from "./packages/engine/src/index.ts";
+import { canSpend } from "./packages/engine/src/budget.ts";
 const s = runCompanyDemo();
 const A = (c, m) => { if (!c) { console.log("FAIL:", m); process.exitCode = 1; } else console.log("ok:", m); };
 A(Object.keys(s.employees).length === 5, "5 名员工");

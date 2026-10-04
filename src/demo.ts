@@ -1,4 +1,4 @@
-import { runCompanyDemo } from "./engine";
+import { runCompanyDemo } from "../packages/engine/src/index.ts";
 const s = runCompanyDemo();
 console.log("员工:", Object.values(s.employees).map(e => e.name + "(" + e.status + ")").join(", "));
 console.log("部门:", Object.values(s.departments).map(d => d.name).join(", "));
