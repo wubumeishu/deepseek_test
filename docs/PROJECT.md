@@ -288,4 +288,10 @@ import { useEffect, useState } from "react";
 - **static-server.mjs**：增加 `/api` 反向代理到 API 服务（4173 一体服务）
 
 **最终状态**：全新机器 `git clone` → `docker compose up -d` → 浏览器打开 4173 即可驱动公司流程。
+
+**Docker 构建验证状态**：
+- `Dockerfile` / `docker-compose.yml` / `deploy/nginx.conf` 已交付，Dockerfile 指令完整（FROM/WORKDIR/COPY/RUN/ENV/EXPOSE/VOLUME/CMD）。
+- **实际 `docker build` 未在本沙箱见证**——Docker 守护进程无法在 agent 上下文中启动（Docker Desktop GUI 助手不在 agent 可达路径，WSL distro 亦无法在 agent 上下文拉起）。
+- **非 Docker 路径已完整验证**（等价 M4 验收：`git clone` → 两条命令 → 浏览器可用）：`npm run start:api`（4174）+ `npm run serve:panel`（4173 含 `/api` 反向代理），经纯 HTTP 驱动 hire/task/standup，重启后状态保留。
+- 在有 Docker 守护进程的机器上执行 `docker compose up -d` 即为最终 M4 验收。
 测试矩阵：smoke 15/15 · lint 0/0 · vitest 38/38 · panel build ✓ · L3 持久化全通过。
