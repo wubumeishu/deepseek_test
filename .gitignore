@@ -6,3 +6,6 @@ dist/
 .tmp-*
 *.tgz
 dev/
+
+# PowerShell 误产生的字面目录
+%SystemDrive%/
