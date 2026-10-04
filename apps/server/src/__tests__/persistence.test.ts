@@ -43,6 +43,6 @@ describe("M3 持久化：SQLite 端口 roundtrip + 会话隔离", () => {
     store.close();
   });
   afterAll(() => {
-    try { fs.rmSync(dbPath, { force: true }); } catch {}
+    try { fs.rmSync(dbPath, { force: true }); } catch { /* ignore if file already gone */ }
   });
 });

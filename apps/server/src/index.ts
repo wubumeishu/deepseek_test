@@ -169,7 +169,7 @@ server.listen(PORT, "127.0.0.1", () => {
   console.log("Compony API 服务已启动（M3 持久化）: http://127.0.0.1:" + PORT + "/api/state");
 });
 
-process.on("SIGTERM", () => { try { store.close(); } catch {} process.exit(0); });
+process.on("SIGTERM", () => { try { store.close(); } catch { /* ignore close errors on shutdown */ } process.exit(0); });
 
 export default server;
 export { store, sessions };
